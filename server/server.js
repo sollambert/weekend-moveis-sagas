@@ -5,6 +5,10 @@ const movieRouter = require('./routes/movie.router.js')
 const genreRouter = require('./routes/genre.router.js')
 const port = process.env.PORT || 5000;
 
+require('dotenv').config();
+console.log(process.env.SQL_USER)
+console.log(process.env.SQL_PASSWORD)
+
 /** ---------- MIDDLEWARE ---------- **/
 app.use(bodyParser.json()); // needed for angular requests
 app.use(express.static('build'));
