@@ -1,6 +1,7 @@
 const pg = require('pg');
 let pool;
 
+require('dotenv').config();
 // When our app is deployed to the internet 
 // we'll use the DATABASE_URL environment variable
 // to set the connection info: web address, username/password, db name
@@ -21,7 +22,9 @@ else {
     pool = new pg.Pool({
         host: 'localhost',
         port: 5432,
-        database: 'saga_movies_weekend', 
+        database: 'saga_movies_weekend',
+        user: process.env.SQL_USER,
+        password: process.env.SQL_PASSWORD
     });
 }
 
