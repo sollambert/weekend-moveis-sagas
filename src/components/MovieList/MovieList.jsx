@@ -25,7 +25,7 @@ function MovieList() {
                     return (
                         <div onClick={(e) => handleClick(e, movie.id)} key={movie.id} >
                             <h3>{movie.title}</h3>
-                            <img src={movie.poster} alt={movie.title}/>
+                            <img src={movie.poster} alt={movie.title} width='185' height='274' />
                         </div>
                     );
                 })}
