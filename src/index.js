@@ -58,7 +58,7 @@ function* fetchAllMovies() {
 function* fetchAllGenres() {
     try {
         const genres = yield axios.get('/api/genre');
-        yield put({ type: 'SET_GENRES', payload: genres.data});
+        yield put({ type: 'SET_GENRES', payload: {loading: false, genres: genres.data}});
     } catch (error) {
         console.error(error);
     }
@@ -134,10 +134,10 @@ const movieDetails = (state = {loading: true}, action) => {
 }
 
 // Used to store the movie genres
-const genres = (state = [], action) => {
+const genres = (state = {loading: true, genres: []}, action) => {
     switch (action.type) {
         case 'SET_GENRES':
-            return action.payload;
+            return {...action.payload};
         default:
             return state;
     }
