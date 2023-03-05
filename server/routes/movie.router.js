@@ -68,4 +68,19 @@ router.post('/', (req, res) => {
   })
 })
 
+router.post('/edit/:id', (req, res) => {
+  const query = `
+  UPDATE movies
+  SET "title" = $1, "description" = $2
+  WHERE id = $3
+  `
+  pool.query(query, [req.body.title, req.body.description, req.params.id])
+  .then((dbRes) => {
+    console.log(dbRes);
+  })
+  .catch((error) => {
+    console.error(error);
+  })
+})
+
 module.exports = router;
