@@ -35,24 +35,24 @@ function MovieForm() {
         }
     }
 
-    const handleChange = (e, key) => {
+    const handleChange = (e, key, genre_id) => {
         if (key == 'genres') {
-            console.log(e.target.value);
+            // console.log(e.target.value);
             setRadios(radios.map((radioValue) => {
                 if (radioValue[e.target.value] != undefined) {
-                    console.log(radioValue[e.target.value])
-                    if (input.genre_ids.includes(e.target.value)
+                    // console.log(radioValue[e.target.value])
+                    if (input.genre_ids.includes(genre_id)
                     && radioValue[e.target.value] == true) {
                         setInput({...input, genre_ids: input.genre_ids.filter((genre) => {
-                            console.log(genre)
-                            if (genre != e.target.value) {
-                                return genre;
+                            // console.log(genre)
+                            if (genre != genre_id) {
+                                return genre_id;
                             }
                         })});
                     }
                     else if (!input.genre_ids.includes(e.target.value)
                     && radioValue[e.target.value] == false) {
-                        setInput({ ...input, [key]: input.genre_ids.push(e.target.value) });
+                        setInput({ ...input, [key]: input.genre_ids.push(genre_id) });
                     }
                     // console.log(radios);
                     // console.log(radioValue);
@@ -81,7 +81,7 @@ function MovieForm() {
     }
 
     // console.log(input.genre_ids);
-    // console.log(radios)
+    console.log(radios)
     // console.log(radios.length == 0)
     console.log(input.genre_ids)
     return (
@@ -113,7 +113,7 @@ function MovieForm() {
                                         type="radio"
                                         value={genre.name}
                                         checked={radios[genre.id - 1][genre.name]}
-                                        onClick={e => handleChange(e, 'genres')} />
+                                        onClick={e => handleChange(e, 'genres', genre.id)} />
                                 </div>
                             )
                         })}
