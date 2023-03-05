@@ -57,6 +57,7 @@ function* submitMovie(action) {
     try {
         console.log(action.payload);
         yield axios.post('/api/movie', {...action.payload});
+        yield action.callback();
         yield put({type: 'FETCH_MOVIES'});
     } catch (error) {
         console.error(error);
