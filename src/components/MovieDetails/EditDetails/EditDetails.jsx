@@ -11,14 +11,22 @@ function EditDetails({ clearDetails, movieDetails, handleEditing }) {
     const dispatch = useDispatch();
     const [values, setValues] = useState({ title: '', description: '' });
 
+    //handle input change
     const handleChange = (e, key) => {
         setValues({ ...values, [key]: e.target.value });
     }
 
+    //submit the new changes for the movie to be updated on db
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(values);
-        dispatch({type: "SUBMIT_DETAIL_EDIT", payload: values, callback: handleEditing});
+        dispatch({type: "SUBMIT_DETAIL_EDIT", payload: values, callback: finishSubmit});
+    }
+
+    //callback for the SUBMIT_DETAIL_EDIT saga
+    const finishSubmit = () => {
+        handleEditing();
+        clearDetails();
+        dispatch({type: "CLEAR_MOVIE_LIST"});
     }
     
     return (
