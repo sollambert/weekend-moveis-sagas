@@ -18,6 +18,7 @@ function* rootSaga() {
     yield takeEvery('FETCH_MOVIE_DETAILS', fetchMovieDetails);
     yield takeEvery('CLEAR_DETAILS', clearDetails);
     yield takeEvery('SUBMIT_MOVIE', submitMovie);
+    yield takeEvery('SUBMIT_DETAIL_EDIT', submitDetailEdit);
 }
 
 //saga for getting details for specific movie from db 
@@ -69,6 +70,16 @@ function* submitMovie(action) {
         yield axios.post('/api/movie', {...action.payload});
         yield action.callback();
         yield put({type: 'FETCH_MOVIES'});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//saga for editing an existing movie
+function* submitDetailEdit(action) {
+    try {
+        yield axios.post(`/api/movie/edit/${action.payload.id}`, action.payload)
+        yield action.callback();
     } catch (error) {
         console.error(error);
     }
