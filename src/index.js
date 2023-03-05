@@ -16,6 +16,7 @@ function* rootSaga() {
     yield takeEvery('FETCH_GENRES', fetchAllGenres);
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('FETCH_MOVIE_DETAILS', fetchMovieDetails);
+    yield takeEvery('CLEAR_DETAILS', clearDetails);
     yield takeEvery('SUBMIT_MOVIE', submitMovie);
 }
 
@@ -68,6 +69,14 @@ function* submitMovie(action) {
         yield axios.post('/api/movie', {...action.payload});
         yield action.callback();
         yield put({type: 'FETCH_MOVIES'});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+function* clearDetails(action) {
+    try {
+        yield put({type: 'CLEAR_MOVIE_DETAILS'});
     } catch (error) {
         console.error(error);
     }

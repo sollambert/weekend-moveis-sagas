@@ -1,13 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { SyncLoader } from 'react-spinners';
+
+import DetailsDisplay from './DetailsDisplay/DetailsDisplay';
+import EditDetails from './EditDetails/EditDetails';
 
 function MovieDetails() {
 
     const { id } = useParams();
     const dispatch = useDispatch();
-    
+    const [editing, setEditing] = useState(false);
+    const [values, setValues] = useState({ title: '', description: '' });
+
 
     const movieDetails = useSelector(store => store.movieDetails);
 
@@ -15,27 +20,44 @@ function MovieDetails() {
         dispatch({ type: 'FETCH_MOVIE_DETAILS', payload: id });
     }, []);
 
+    const handleChange = (e, key) => {
+        setValues({ ...values, [key]: e.target.value });
+    }
+
     const clearDetails = () => {
-        dispatch({ type: 'CLEAR_MOVIE_DETAILS'});
+        dispatch({ type: 'CLEAR_DETAILS' });
+    }
+
+    const handleEditing = () => {
+        setValues(movieDetails);
+        setEditing(!editing);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
     }
 
     return (
         <>
             {
                 movieDetails.loading ?
-                <SyncLoader color={'#a0a0a0'}/>
-                :
-                    <div>
-                        <h1>{movieDetails.title}</h1>
-                        <img src={movieDetails.poster} width='185' height='274' />
-                        <ul>
-                            {movieDetails.genres.map((genre, i) => {
-                                return <li key={i} >{genre}</li>
-                            })}
-                        </ul>
-                        <p>{movieDetails.description}</p>
-                        <Link to="/" onClick={clearDetails}>HOME</Link>
-                    </div>
+                    <SyncLoader color={'#a0a0a0'} />
+                    :
+                    <>
+                        {editing ?
+                            <EditDetails
+                                movieDetails={movieDetails}
+                                handleChange={handleChange}
+                                handleEditing={handleEditing}
+                                clearDetails={clearDetails}
+                                values={values} />
+                            :
+                            <DetailsDisplay
+                                movieDetails={movieDetails}
+                                handleEditing={handleEditing}
+                                clearDetails={clearDetails} />
+                        }
+                    </>
             }
         </>
     )
