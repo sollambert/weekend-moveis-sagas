@@ -23,11 +23,19 @@ function* rootSaga() {
 function* fetchMovieDetails(action) {
     try {
         const movieDetails = yield axios.get(`/api/movie/${action.payload}`)
-        console.log('details:', movieDetails)
-        yield put({type: 'SET_MOVIE_DETAILS', payload: movieDetails.data})
+        const genreDetails = yield axios.get(`/api/genre/${action.payload}`)
+        console.log('details:', movieDetails, genreDetails)
+        yield wait(500);
+        yield put({type: 'SET_MOVIE_DETAILS', payload: { loading: false,
+            ...movieDetails.data,
+            genres: genreDetails.data.map((genre) => genre.name)}})
     } catch (error) {
         console.log(error);
     }
+}
+
+async function wait(ms) {
+    return new Promise(resolve =>  setTimeout(resolve, ms));
 }
 
 //saga for getting all movies from db
@@ -35,7 +43,8 @@ function* fetchAllMovies() {
     // get all movies from the DB
     try {
         const movies = yield axios.get('/api/movie');
-        yield put({ type: 'SET_MOVIES', payload: movies.data });
+        yield wait(1000);
+        yield put({type: 'SET_MOVIES',  payload: {loading: false, movies: movies.data}});
     } catch {
         console.log('get all error');
     }
@@ -68,7 +77,7 @@ function* submitMovie(action) {
 const sagaMiddleware = createSagaMiddleware();
 
 // Used to store movies returned from the server
-const movies = (state = [], action) => {
+const movies = (state = {loading: true}, action) => {
     switch (action.type) {
         case 'SET_MOVIES':
             return action.payload;
@@ -78,10 +87,12 @@ const movies = (state = [], action) => {
 }
 
 // movie details reducer
-const movieDetails = (state = {}, action) => {
+const movieDetails = (state = {loading: true}, action) => {
     switch (action.type) {
         case 'SET_MOVIE_DETAILS':
             return action.payload;
+        case 'CLEAR_MOVIE_DETAILS':
+            return {loading: true}
         default: 
         return state;
     }
