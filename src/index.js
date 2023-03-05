@@ -16,7 +16,10 @@ function* rootSaga() {
     yield takeEvery('FETCH_GENRES', fetchAllGenres);
     yield takeEvery('FETCH_MOVIES', fetchAllMovies);
     yield takeEvery('FETCH_MOVIE_DETAILS', fetchMovieDetails);
+    yield takeEvery('CLEAR_DETAILS', clearDetails);
+    yield takeEvery('CLEAR_MOVIE_LIST', clearMovieList);
     yield takeEvery('SUBMIT_MOVIE', submitMovie);
+    yield takeEvery('SUBMIT_DETAIL_EDIT', submitDetailEdit);
 }
 
 //saga for getting details for specific movie from db 
@@ -73,6 +76,36 @@ function* submitMovie(action) {
     }
 }
 
+//saga for editing an existing movie
+function* submitDetailEdit(action) {
+    try {
+        yield axios.put(`/api/movie/${action.payload.id}`, action.payload)
+        // yield console.log(action.callback)
+        yield action.callback();
+        yield put({type: "FETCH_MOVIE_DETAILS", payload: action.payload.id})
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//saga for clearing loaded movie details
+function* clearDetails() {
+    try {
+        yield put({type: 'CLEAR_MOVIE_DETAILS'});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//saga for clearing movie list
+function* clearMovieList() {
+    try {
+        yield put({type: 'CLEAR_MOVIES'});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 // Create sagaMiddleware
 const sagaMiddleware = createSagaMiddleware();
 
@@ -81,6 +114,8 @@ const movies = (state = {loading: true}, action) => {
     switch (action.type) {
         case 'SET_MOVIES':
             return action.payload;
+        case 'CLEAR_MOVIES':
+            return {loading: true};
         default:
             return state;
     }
