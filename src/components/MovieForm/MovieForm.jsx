@@ -14,10 +14,12 @@ function MovieForm() {
         title: '',
         description: '',
         poster: '',
+        genre_id: 1,
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log(input)
         dispatch({type: "SUBMIT_MOVIE", payload: input});
         clearInput();
     }
@@ -26,15 +28,12 @@ function MovieForm() {
         setInput({ ...input, [key]: e.target.value });
     }
 
-    const handleSelect = (e) => {
-        setInput({...input, genre_id: e.target.value});
-    }
-
     const clearInput = () => {
         setInput({
             title: '',
             description: '',
             poster: '',
+            genre_id: 1,
         });
     }
 
@@ -52,9 +51,9 @@ function MovieForm() {
                 <input type="text" placeholder="Poster URL" value={input.poster}
                     onChange={e => handleChange(e, 'poster')} />
                 <input type="submit" value="SUBMIT" onClick={handleSubmit} />
-                <select onChange={handleSelect}>
+                <select value={input.genre_id} onChange={(e) => handleChange(e, 'genre_id')}>
                     {genres.map((genre) => {
-                        return <option value={genre.id}>{genre.name}</option>
+                        return <option key={genre.id} value={genre.id}>{genre.name}</option>
                     })}
                 </select>
             </form>
