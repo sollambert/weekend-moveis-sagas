@@ -24,7 +24,7 @@ function MovieForm() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(input)
+        console.log(input);
         if (input.title != ''
             && input.description != ''
             && input.poster != '') {
@@ -40,14 +40,28 @@ function MovieForm() {
             console.log(e.target.value);
             setRadios(radios.map((radioValue) => {
                 if (radioValue[e.target.value] != undefined) {
-                    console.log(radios);
+                    console.log(radioValue[e.target.value])
+                    if (input.genre_ids.includes(e.target.value)
+                    && radioValue[e.target.value] == true) {
+                        setInput({...input, genre_ids: input.genre_ids.filter((genre) => {
+                            console.log(genre)
+                            if (genre != e.target.value) {
+                                return genre;
+                            }
+                        })});
+                    }
+                    else if (!input.genre_ids.includes(e.target.value)
+                    && radioValue[e.target.value] == false) {
+                        setInput({ ...input, [key]: input.genre_ids.push(e.target.value) });
+                    }
+                    // console.log(radios);
+                    // console.log(radioValue);
                     radioValue[e.target.value] = !radioValue[e.target.value];
                     return radioValue;
                 } else {
                     return radioValue;
                 }
             }))
-            setInput({ ...input, [key]: input.genre_ids.push(e.target.value) });
         } else {
             setInput({ ...input, [key]: e.target.value });
         }
@@ -69,6 +83,7 @@ function MovieForm() {
     // console.log(input.genre_ids);
     // console.log(radios)
     // console.log(radios.length == 0)
+    console.log(input.genre_ids)
     return (
         <>
             {((!loading) && radios.length == 0) ?
