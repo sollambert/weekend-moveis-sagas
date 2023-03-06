@@ -84,6 +84,7 @@ router.put('/:id', (req, res) => {
   SET "title" = $1, "description" = $2
   WHERE id = $3
   `
+  console.log(req.body)
   pool.query(query, [req.body.title, req.body.description, req.params.id])
   .then((dbRes) => {
     // console.log(dbRes);
