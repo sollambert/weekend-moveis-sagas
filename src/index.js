@@ -31,7 +31,7 @@ function* fetchMovieDetails(action) {
         yield wait(500);
         yield put({type: 'SET_MOVIE_DETAILS', payload: { loading: false,
             ...movieDetails.data,
-            genres: genreDetails.data.map((genre) => genre.name)}})
+            genres: genreDetails.data.map((genre) => genre.name)}});
     } catch (error) {
         console.log(error);
     }

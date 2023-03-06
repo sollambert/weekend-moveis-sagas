@@ -113,6 +113,7 @@ function MovieForm() {
                                         type="radio"
                                         value={genre.name}
                                         checked={radios[genre.id - 1][genre.name]}
+                                        onChange={() => {}}
                                         onClick={e => handleChange(e, 'genres', genre.id)} />
                                 </div>
                             )
